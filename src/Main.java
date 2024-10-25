@@ -5,6 +5,5 @@ public class Main {
         PlayingField pf = new PlayingField(5, 3);
         pf.setValue(1, 0, 5);
         pf.draw();
-    }
-    int x = 5;
+    
 }
