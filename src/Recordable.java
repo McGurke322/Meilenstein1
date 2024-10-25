@@ -1,3 +1,4 @@
+//Protokollierbar
 public interface Recordable {
 
     public void recordMove(GameMove move);
