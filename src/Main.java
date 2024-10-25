@@ -6,5 +6,5 @@ public class Main {
         pf.setValue(1, 0, 5);
         pf.draw();
     }
-    int x = 6;
+    int x = 5;
 }
