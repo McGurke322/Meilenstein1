@@ -5,6 +5,14 @@ public class Field implements Drawable {
     private int sizeY;
     private int[][] fieldArray;
 
+
+    public void setSizeX(int sizeX) {
+        this.sizeX = sizeX;
+    }
+    public void setSizeY(int sizeY) {
+        this.sizeY = sizeY;
+    }
+
     public Field(int sizeX, int sizeY) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
@@ -54,6 +62,7 @@ public class Field implements Drawable {
                 fieldArray[i][j] = 0;
             }
         }
+        draw();
     }
 
     public boolean inBounds(int x, int y) {
