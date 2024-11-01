@@ -16,5 +16,14 @@ public class Player {
     public String getName() {
         return name;
     }
+
+    public boolean isComputer(){
+        return computer;
+
+    }
+
+    public int getID() {
+        return id;
+    }
 }
 

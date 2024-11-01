@@ -25,22 +25,26 @@ public class Field implements Drawable {
 
     //Gibt Wert von gegebener Spielbrettposition zurück
     public int getValue(int x, int y) {
-        if (!inBounds(x, y)) {
+        return fieldArray[x][y];
+
+        /*if (!inBounds(x, y)) {
             return -1;
         }
         else {
             return fieldArray[x][y];
-        }
+        }*/
     }
 
     //Setzt gegebenen Wert auf Spielbrettposition
     public void setValue(int x, int y, int value) {
+        fieldArray[x][y] = value;
+        /*return;
         if (!inBounds(x, y)) {
             System.out.println("Error while setting value.");
         }
         else {
             fieldArray[x][y] = value;
-        }
+        }*/
     }
 
     private void initializePlayingFieldArray() {
@@ -52,12 +56,22 @@ public class Field implements Drawable {
         }
     }
 
-    public Boolean inBounds(int x, int y) {
+    public boolean inBounds(int x, int y) {
         if (x < 0 || x >= sizeX || y < 0 || y >= sizeY) {
             System.out.println("Out of bounds.");
             return false;
         }
         return true;
     }
+
+    public int getSizeX() {
+        return sizeX;
+    }
+
+    public int getSizeY() {
+        return sizeY;
+    }
+
+
 }
 
