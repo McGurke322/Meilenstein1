@@ -23,12 +23,23 @@ public class Field implements Drawable {
     // x -> Horizontal || y -> Vertikal
     @Override
     public void draw() {
+        for (int start = 0; start < sizeX; start++)
+        {System.out.print(start + " ");}
+        System.out.println();
+
+        for (int minus = 0; minus < sizeX; minus++)
+        {System.out.print("- ");}
+        System.out.println();
+
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++) {
                 System.out.print(fieldArray[x][y] + " ");
             }
-            System.out.println();
+            System.out.println("|"+y);
         }
+        for (int end = 0; end < sizeX; end++)
+        {System.out.print("- ");}
+        System.out.println();
     }
 
     //Gibt Wert von gegebener Spielbrettposition zurück

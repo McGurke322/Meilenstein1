@@ -2,11 +2,17 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("Which game? (0 = 4 Gewinnt, 1 = Chomp)");
+        Scanner whichgame = new Scanner(System.in);
+        int game = whichgame.nextInt();
+        if (game == 0) {
+            FourWins fourWins = new FourWins();
+            fourWins.run();
+        } else if (game == 1) {
+            Chomp chomp = new Chomp();
+            chomp.run();
+        }
 
-        FourWins fourWins = new FourWins();
-        fourWins.run();
-        Chomp chomp = new Chomp();
-        chomp.run();
     }
 }
 
