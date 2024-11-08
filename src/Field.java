@@ -67,7 +67,7 @@ public class Field implements Drawable {
 
     public boolean inBounds(int x, int y) {
         if (x < 0 || x >= sizeX || y < 0 || y >= sizeY) {
-            System.out.println("Out of bounds.");
+            //System.out.println("Out of bounds.");
             return false;
         }
         return true;

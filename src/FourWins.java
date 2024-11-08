@@ -2,7 +2,7 @@ import java.util.Random;
 import java.util.Scanner;
 //https://code-with-me.global.jetbrains.com/KQxQQez3HwuzC65kdqAYdA#p=IU&fp=78063E2E7733AC7E74A61C521001188558ECB3EC8FCC338B7FC92596878734A9&newUi=true
 public class FourWins extends Game {
-
+    //
     private int plays = 0;
 
     public FourWins() {
