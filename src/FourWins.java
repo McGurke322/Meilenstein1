@@ -1,7 +1,9 @@
 import java.util.Random;
 import java.util.Scanner;
-
+//https://code-with-me.global.jetbrains.com/KQxQQez3HwuzC65kdqAYdA#p=IU&fp=78063E2E7733AC7E74A61C521001188558ECB3EC8FCC338B7FC92596878734A9&newUi=true
 public class FourWins extends Game {
+
+    private int plays = 0;
 
     public FourWins() {
         field = new Field(7, 6);
@@ -35,7 +37,7 @@ public class FourWins extends Game {
                 else {
                     System.out.println("Computers turn (" + player.getName() + ")");
                     //stringInput = "";
-                    intInput = computerOutput();
+                    intInput = computerOutput(player);
                     finishedPlay = true;
                 }
 
@@ -47,17 +49,23 @@ public class FourWins extends Game {
 
                 //noch int input überprüfen
                 finishedPlay = placeChip(player, intInput);
-            }
 
-            //System.out.flush();
-            field.draw();
+                if (finishedPlay) {
+                    plays++;
+                }
+            }
+            if (plays >= field.getSizeX()*field.getSizeY()) {
+                ended = true;
+            }
         }
     }
 
     @Override
     public void round() {
         play(player1);
+        field.draw();
         play(player2);
+        field.draw();
     }
 
     @Override
@@ -69,10 +77,9 @@ public class FourWins extends Game {
         if (winner != null) {
             System.out.println(winner.getName() + " won!");
         }
-    }
-
-    private Boolean validInput() {
-        return false;
+        {
+            System.out.println("Unentschieden");
+        }
     }
 
     private boolean placeChip(Player player, int xPos) {
@@ -83,7 +90,7 @@ public class FourWins extends Game {
                 yPos++;
             }
 
-            if (yPos <= 0) {
+            if (yPos < 0) {
                 System.out.println("Invalid position");
                 return false;
             }
@@ -96,11 +103,14 @@ public class FourWins extends Game {
         return false;
     }
 
-    private void checkWin(Player player, int x, int y) {
+    private boolean checkWin(Player player, int x, int y) {
         if (checkRow(player.getID(), x, y, 1, 0) || checkRow(player.getID(), x, y, 0, 1) || checkRow(player.getID(), x, y, 1, 1)) {
             ended = true;
             winner = player;
+            return true;
         }
+
+        return false;
     }
 
     private boolean checkRow(int id, int x, int y, int xDirection, int yDirection) {
@@ -130,10 +140,49 @@ public class FourWins extends Game {
         return false;
     }
 
-    private int computerOutput() {
+    private int computerOutput(Player player) {
         Random random = new Random();
-        int randomInt = random.nextInt(field.getSizeX()-1);
-        return randomInt;
+        int output;
+        output = canWinNext(player);
+        if (output == -1) {
+            if (player == player1) {
+                output = canWinNext(player2);
+            }
+            else {
+                output = canWinNext(player1);
+            }
+        }
+
+        if (output == -1) {
+            output = random.nextInt(field.getSizeX() - 1);
+        }
+
+        return output;
+    }
+
+    private int canWinNext(Player player) {
+        int x = -1;
+        for (int i = 0; i < field.getSizeX(); i++) {
+            int y = -1;
+            x++;
+            while (field.inBounds(x, y+1) && field.getValue(x, y+1) == 0) {
+                y++;
+            }
+            if (y > -1) {
+                placeChip(player, i);
+                if (checkWin(player, x, y)) {
+                    winner = null;
+                    ended = false;
+                    field.setValue(x, y, 0);
+                    return x;
+                }
+                field.setValue(x, y, 0);
+            }
+            winner = null;
+            ended = false;
+        }
+
+        return -1;
     }
 }
 
