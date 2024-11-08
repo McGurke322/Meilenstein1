@@ -17,9 +17,16 @@ public class Player {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public boolean isComputer(){
         return computer;
+    }
 
+    public void setComputer(boolean computer) {
+        this.computer = computer;
     }
 
     public int getID() {

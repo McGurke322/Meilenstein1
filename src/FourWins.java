@@ -1,37 +1,41 @@
 import java.util.Random;
 import java.util.Scanner;
 //https://code-with-me.global.jetbrains.com/KQxQQez3HwuzC65kdqAYdA#p=IU&fp=78063E2E7733AC7E74A61C521001188558ECB3EC8FCC338B7FC92596878734A9&newUi=true
-public class FourWins extends Game {
-    //
+public class FourWins extends Game implements Recordable {
     private int plays = 0;
 
     public FourWins() {
-        field = new Field(7, 6);
-        System.out.println(field.getSizeX() + " " + field.getSizeY());
-
-        //todo Get Player name input
-        player1 = new Player("Player 1", false);
-        player2 = new Player("Player 2", true);
-        player1.setID(1);
-        player2.setID(2);
-        ended = false;
-        winner = null;
+        initializeGame();
     }
 
     @Override
     public void play(Player player) {
         if (!ended) {
             boolean finishedPlay = false;
+            int intInput;
 
             while (!finishedPlay) {
-                int intInput;
                 String stringInput = "";
 
                 if (!player.isComputer()) {
                     System.out.println(player.getName() + "'s input (Enter single int): ");
                     Scanner scan = new Scanner(System.in);
-                    //stringInput = scan.nextLine();
-                    intInput = scan.nextInt();
+
+                    String s;
+                    do {
+                        s = scan.next();
+                        boolean found = false;
+                        for (int i = 0; i < field.getSizeX(); i++) {
+                            if (s.equals(Integer.toString(i))) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if(found) break;
+                        System.out.println("Error, try again");
+                    } while (true);
+
+                    intInput = Integer.parseInt(s);
                     finishedPlay = true;
                 }
                 else {
@@ -44,14 +48,15 @@ public class FourWins extends Game {
                 if (stringInput.equals("exit")) {
                     ended = true;
                     finishedPlay = true;
-                    System.out.println("das spiel wurde frühzeitig beendet");
+                    System.out.println("Das spiel wurde frühzeitig beendet");
                 }
 
                 //noch int input überprüfen
-                finishedPlay = placeChip(player, intInput);
+                finishedPlay = move(player, intInput);
 
                 if (finishedPlay) {
                     plays++;
+                    recordMove(new GameMove("VierGewinnt", player, intInput, 0));
                 }
             }
             if (plays >= field.getSizeX()*field.getSizeY()) {
@@ -74,15 +79,17 @@ public class FourWins extends Game {
         while (!ended) {
             round();
         }
+
         if (winner != null) {
             System.out.println(winner.getName() + " won!");
         }
+        else
         {
             System.out.println("Unentschieden");
         }
     }
 
-    private boolean placeChip(Player player, int xPos) {
+    private boolean move(Player player, int xPos) {
         System.out.println("placing chip at: " + xPos);
         if (field.inBounds(xPos, 0)) {
             int yPos = -1;
@@ -169,7 +176,7 @@ public class FourWins extends Game {
                 y++;
             }
             if (y > -1) {
-                placeChip(player, i);
+                move(player, i);
                 if (checkWin(player, x, y)) {
                     winner = null;
                     ended = false;
@@ -183,6 +190,85 @@ public class FourWins extends Game {
         }
 
         return -1;
+    }
+    @Override
+    public void initializeGame() {
+        boolean comp1;
+        boolean comp2;
+        String name1;
+        String name2;
+        int com;
+
+        field = new Field(7, 6);
+
+        System.out.println("Choose name for Player 1: ");
+        Scanner name1S = new Scanner(System.in);
+        name1 = name1S.nextLine();
+
+        /*System.out.println("Choose Player 1 type (0 = player, 1 = computer): ");
+        Scanner com1S = new Scanner(System.in);
+        int com = com1S.nextInt();
+        if (com == 0) {
+            comp1 = false;
+        }
+        else {
+            comp1 = true;
+        }*/
+
+        System.out.println("Choose Player 2 type (0 = player, 1 = computer): ");
+        Scanner com2S = new Scanner(System.in);
+
+        String s;
+        do {
+            s = com2S.next();
+            boolean found = false;
+            for (int i = 0; i < 2; i++) {
+                if (s.equals(Integer.toString(i))) { //entweder 0 oder 1
+                    found = true;
+                    break;
+                }
+            }
+            if(found) break;
+            System.out.println("Error, try again");
+        } while (true);
+
+        com = Integer.parseInt(s);
+        if (com == 0) {
+            comp2 = false;
+        }
+        else {
+            comp2 = true;
+        }
+
+        if (comp2 == false) {
+            System.out.println("Choose name for Player 2: ");
+            Scanner name2S = new Scanner(System.in);
+            name2 = name2S.nextLine();
+        }
+        else {
+            name2 = "Comp";
+        }
+
+
+        player1 = new Player(name1, false);
+        player2 = new Player(name2, comp2);
+
+        player1.setID(1);
+        player2.setID(2);
+        ended = false;
+        winner = null;
+
+        field = new Field(7, 6);
+    }
+
+    @Override
+    public void recordMove(GameMove move) {
+        record.push(move);
+    }
+
+    @Override
+    public void deleteMove() {
+        record.pop();
     }
 }
 
