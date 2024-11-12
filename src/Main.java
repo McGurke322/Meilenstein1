@@ -6,24 +6,34 @@ public class Main {
         Scanner whichgame = new Scanner(System.in);
 
         /*
-        boolean found1 = false;
-        boolean found2 = false;
-        String s1;
-        String s2;
-        do {
-            s1 = whichgame.next();
-            if(s1.equals("0") || s1.equals("1")) found1 = true;
-            s2 = whichgame.next();
-            System.out.println("Error, try again");
-            if(s2.equals("0") || s2.equals("1")) found2 = true;
-        } while (!found1 & !found2);
-        int game = Integer.parseInt(s1);
-        int game2 = Integer.parseInt(s2);
-        System.out.println(s1);
-        System.out.println(s2);
+        String input;
+        boolean correctInput1 = false;
+        boolean correctInput2 = false;
+        Scanner sc = new Scanner(System.in);
+        while (!correctInput1 && !correctInput2) {
+            correctInput1 = false;
+
+            input = sc.nextLine();
+            String[] s = input.split(" ");
+
+            if (s.length > 1) {
+                for (int i = 0; i < 4; i++) { //akzeptiert int 0 bis 3 an 1. eingabeposition
+                    if (s[0].equals(Integer.toString(i))) {
+                        correctInput1 = true;
+                        break;
+                    }
+                }
+
+                if (correctInput1) {
+                    for (int i = 2; i < 5; i++) { //akzeptiert int 2 bis 4 an 2. eingabeposition
+                        if (s[1].equals(Integer.toString(i))) {
+                            correctInput2 = true;
+                        }
+                    }
+                }
+            }
+        }
         */
-
-
 
         String s;
         do {

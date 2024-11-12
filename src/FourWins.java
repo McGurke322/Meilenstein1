@@ -1,8 +1,9 @@
+//4 Gewinnt
 import java.util.Random;
 import java.util.Scanner;
-//https://code-with-me.global.jetbrains.com/KQxQQez3HwuzC65kdqAYdA#p=IU&fp=78063E2E7733AC7E74A61C521001188558ECB3EC8FCC338B7FC92596878734A9&newUi=true
+
 public class FourWins extends Game implements Recordable {
-    private int plays = 0;
+    private int plays = 0; //Anzahl der Spielzüge um zu überprüfen ob ein Unentschieden vorliegt
 
     public FourWins() {
         initializeGame();
@@ -15,8 +16,6 @@ public class FourWins extends Game implements Recordable {
             int intInput;
 
             while (!finishedPlay) {
-                String stringInput = "";
-
                 if (!player.isComputer()) {
                     System.out.println(player.getName() + "'s input (Enter single int): ");
                     Scanner scan = new Scanner(System.in);
@@ -40,25 +39,19 @@ public class FourWins extends Game implements Recordable {
                 }
                 else {
                     System.out.println("Computers turn (" + player.getName() + ")");
-                    //stringInput = "";
                     intInput = computerOutput(player);
                     finishedPlay = true;
                 }
 
-                if (stringInput.equals("exit")) {
-                    ended = true;
-                    finishedPlay = true;
-                    System.out.println("Das spiel wurde frühzeitig beendet");
-                }
-
-                //noch int input überprüfen
                 finishedPlay = move(player, intInput);
 
                 if (finishedPlay) {
                     plays++;
+                    //Dokumentiere Spielzug
                     recordMove(new GameMove("VierGewinnt", player, intInput, 0));
                 }
             }
+            //Unentschieden?
             if (plays >= field.getSizeX()*field.getSizeY()) {
                 ended = true;
             }
@@ -90,7 +83,6 @@ public class FourWins extends Game implements Recordable {
     }
 
     private boolean move(Player player, int xPos) {
-        System.out.println("placing chip at: " + xPos);
         if (field.inBounds(xPos, 0)) {
             int yPos = -1;
             while (field.inBounds(xPos, yPos + 1) && field.getValue(xPos, yPos + 1) == 0) {
@@ -110,6 +102,7 @@ public class FourWins extends Game implements Recordable {
         return false;
     }
 
+    //Überprüft ob an ein Spieler an einer bestimmten position gewonnen hat
     private boolean checkWin(Player player, int x, int y) {
         if (checkRow(player.getID(), x, y, 1, 0) || checkRow(player.getID(), x, y, 0, 1) || checkRow(player.getID(), x, y, 1, 1)) {
             ended = true;
@@ -120,6 +113,10 @@ public class FourWins extends Game implements Recordable {
         return false;
     }
 
+    //Überprüft ob eine reihe mindestens 4 Chips einer Farbe (Zahl 1 oder 2) beinhaltet
+    //xDir=1, yDir=0: horizontal
+    //xDir=0, yDir=1: vertikal
+    //xDir=1, yDir=1: diagonal
     private boolean checkRow(int id, int x, int y, int xDirection, int yDirection) {
         int n = 0;
         int currX = x;
@@ -147,10 +144,13 @@ public class FourWins extends Game implements Recordable {
         return false;
     }
 
+    //KI für den Computer-Gegner
     private int computerOutput(Player player) {
         Random random = new Random();
+
         int output;
         output = canWinNext(player);
+
         if (output == -1) {
             if (player == player1) {
                 output = canWinNext(player2);
@@ -205,16 +205,6 @@ public class FourWins extends Game implements Recordable {
         Scanner name1S = new Scanner(System.in);
         name1 = name1S.nextLine();
 
-        /*System.out.println("Choose Player 1 type (0 = player, 1 = computer): ");
-        Scanner com1S = new Scanner(System.in);
-        int com = com1S.nextInt();
-        if (com == 0) {
-            comp1 = false;
-        }
-        else {
-            comp1 = true;
-        }*/
-
         System.out.println("Choose Player 2 type (0 = player, 1 = computer): ");
         Scanner com2S = new Scanner(System.in);
 
@@ -248,7 +238,6 @@ public class FourWins extends Game implements Recordable {
         else {
             name2 = "Comp";
         }
-
 
         player1 = new Player(name1, false);
         player2 = new Player(name2, comp2);
