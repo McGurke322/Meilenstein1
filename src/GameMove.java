@@ -13,6 +13,6 @@ public class GameMove {
     }
 
     public String myToString() {
-        return game + ": " + player.getName() + "'s input was at: " + placeX + ", " + placeY;
+        return game + ": " + player.getName() + "'s input was: " + placeX + ", " + placeY;
     }
 }

@@ -12,33 +12,35 @@ public class Chomp extends Game implements Recordable {
     @Override
     public void round() {
         play(player1);
+        field.draw();
         play(player2);
+        field.draw();
     }
 
     @Override
     public void run() {
-
         while (!ended) {
             round();
         }
     }
 
     public Boolean inBounds(int x, int y) {
-
         return !(x < 0 || x >= field.getSizeX() || y < 0 || y >= field.getSizeY() || field.getValue(x,y) == 1);
     }
-    public void move(int x, int y){
+
+    public boolean move(Player player, int x, int y) {
                 for (int j = y; j < field.getSizeY(); j++) {
                     for (int i = x; i < field.getSizeX(); i++) {
                         field.setValue(i, j, 1);
                     }
                 }
-                field.draw();
+                return true;
     }
 
     @Override
     public void play(Player player) {
 
+    boolean finishedPlay = false;
         if(!ended) {
             end(player);
         }
@@ -49,6 +51,7 @@ public class Chomp extends Game implements Recordable {
 
         //Player moves
         if (!ended && !player.isComputer()) {
+
             while(!inBounds(x, y)) {
                 z = z + 1;
                 if(z>1){
@@ -62,18 +65,21 @@ public class Chomp extends Game implements Recordable {
                 try {
                     x = scan.nextInt();
 
-                } catch (Exception e) {
-                    System.out.println("keine gültiges x");
+                } catch (Exception ignored) {
+
                 }
                 ;
                 try {
                     y = scan.nextInt();
-                } catch (Exception e) {
-                    System.out.println("keine gültiges y");
+                } catch (Exception ignored) {
+
                 }
 
             }
-            move(x,y);
+            if (inBounds(x,y)) {
+                move(player,x,y);
+                finishedPlay = true;
+            }
     }
 
         //Computer moves
@@ -84,23 +90,25 @@ public class Chomp extends Game implements Recordable {
                &&(field.getValue(1,1)== 0)
             )
             {
-                move(1,1);
+                x = 1;
+                y = 1;
+                finishedPlay = true;
             }
 
-
             else if (field.getValue(0, 1) == 1 && field.getValue(1,0) == 0) {
-                move(1, 0);
+                x = 1;
+                y = 0;
+                finishedPlay = true;
             }
 
             else if (field.getValue(1,0) == 1 && field.getValue(0,1) == 0){
-                move(0,1);
+                x = 0;
+                y = 1;
+                finishedPlay = true;
             }
 
-            else if (field.getValue(0, 1) == 1 && field.getValue(1,0) == 1) {
-                move(0, 0);
-            }
-
-            else {
+            else if (field.getValue(0,1) == 0 && field.getValue(1,0)== 0)
+            {
                 Random random = new Random();
                 int randomInt = random.nextInt(3);
 
@@ -112,7 +120,9 @@ public class Chomp extends Game implements Recordable {
                         }
 
                     }
-                    move(j - 1, 0);
+                    x = j-1;
+                    y = 0;
+                    finishedPlay = true;
                 }
                 else if(randomInt == 2)
                 {
@@ -123,7 +133,9 @@ public class Chomp extends Game implements Recordable {
                         }
 
                     }
-                    move(0, s-1);
+                    x = 0;
+                    y = s-1;
+                    finishedPlay = true;
 
                 }
                else {
@@ -138,7 +150,9 @@ public class Chomp extends Game implements Recordable {
                             randomInt2 = random.nextInt(a);
                             randomInt3 = random.nextInt(b);
                         }
-                       move(randomInt2,randomInt3);
+                        x = randomInt2;
+                        y = randomInt3;
+                        finishedPlay = true;
                     }
                     else{
                         int s = 0;
@@ -148,11 +162,29 @@ public class Chomp extends Game implements Recordable {
                             }
 
                         }
-                        move(0, s-1);
+                        x = 0;
+                        y = s-1;
+                        finishedPlay = true;
                     }
                 }
             }
+            else {
+                x = 0;
+                y = 0;
+                finishedPlay = true;
+            }
+         move(player,x,y);
+
         }
+
+       if(!ended) {
+           finishedPlay = move(player, x, y);
+
+           if (finishedPlay) {
+               //Dokumentiere Spielzug
+               recordMove(new GameMove("Chomp", player, x, y));
+           }
+       }
     }
     //check if end
     public void end(Player player){
@@ -198,35 +230,44 @@ public class Chomp extends Game implements Recordable {
         player2 = new Player(name2, comp2);
         //Spielfeldgröße
 
-        System.out.println("Enter 2 int for size of playingfield ");
+        System.out.println("Enter 2 int for size of playingfield (>2 2)");
 
 
         int SizeY = 0;
         int SizeX = 0;
-        while(!(SizeX > 0 && SizeY > 0)) {
+        int u = 0;
+        while(!(SizeX > 2 && SizeY > 2)) {
+            u+=1;
+            if(u>1){
+            System.out.println("x or y are not > 2");
+            System.out.println("Try again");
+        }
+
             Scanner scanfield = new Scanner(System.in);
 
             try {
                 SizeX = scanfield.nextInt();
-
-            } catch (Exception e) {
-                System.out.println("Try again");
+            } catch (Exception ignore) {
             }
-            ;
+
             try {
                 SizeY = scanfield.nextInt();
-            } catch (Exception e) {
-                System.out.println("Try neu");
+            } catch (Exception ignore) {
             }
-        }
+
+            }
 
         field = new Field(SizeX,SizeY);
         ended = false;
         winner = null;
     }
     @Override
-    public void recordMove(GameMove move) {  record.push(move);    }
+    public void recordMove(GameMove move) {
+        record.push(move);
+    }
 
     @Override
-    public void deleteMove() {  record.pop();    }
+    public void deleteMove() {
+        record.pop();
+    }
 }
