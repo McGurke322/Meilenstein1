@@ -25,7 +25,7 @@ public class Chomp extends Game implements Recordable {
 
     public Boolean inBounds(int x, int y) {
 
-        return !(x < 0 || x >= 16 || y < 0 || y >= 16 || field.getValue(x,y) == 1);
+        return !(x < 0 || x >= field.getSizeX() || y < 0 || y >= field.getSizeY() || field.getValue(x,y) == 1);
     }
     public void move(int x, int y){
                 for (int j = y; j < field.getSizeY(); j++) {
@@ -43,8 +43,8 @@ public class Chomp extends Game implements Recordable {
             end(player);
         }
 
-        int x = 16;
-        int y = 16;
+        int x = field.getSizeX();
+        int y = field.getSizeY();
         int z = 0;
 
         //Player moves
@@ -59,15 +59,19 @@ public class Chomp extends Game implements Recordable {
 
 
                 Scanner scan = new Scanner(System.in);
-                /*String s;
-                do {
-                    s = scan.next();
-                    if(s.equals("0") || s.equals("1")) break;
-                    System.out.println("Error, try again");
-                } while (true);
-*/
-                x = scan.nextInt();
-                y = scan.nextInt();
+                try {
+                    x = scan.nextInt();
+
+                } catch (Exception e) {
+                    System.out.println("keine gültiges x");
+                }
+                ;
+                try {
+                    y = scan.nextInt();
+                } catch (Exception e) {
+                    System.out.println("keine gültiges y");
+                }
+
             }
             move(x,y);
     }
@@ -83,6 +87,7 @@ public class Chomp extends Game implements Recordable {
                 move(1,1);
             }
 
+
             else if (field.getValue(0, 1) == 1 && field.getValue(1,0) == 0) {
                 move(1, 0);
             }
@@ -97,7 +102,7 @@ public class Chomp extends Game implements Recordable {
 
             else {
                 Random random = new Random();
-                int randomInt = random.nextInt(2);
+                int randomInt = random.nextInt(3);
 
                 if (randomInt == 1) {
                     int j = 0;
@@ -109,7 +114,7 @@ public class Chomp extends Game implements Recordable {
                     }
                     move(j - 1, 0);
                 }
-                else
+                else if(randomInt == 2)
                 {
                     int s = 0;
                     for (s = 0; s < field.getSizeY(); s++) {
@@ -120,6 +125,31 @@ public class Chomp extends Game implements Recordable {
                     }
                     move(0, s-1);
 
+                }
+               else {
+                    if(field.getValue(1,1)== 0){
+                        int a = field.getSizeX();
+                        int b = field.getSizeY();
+                        int randomInt2 = field.getSizeX();
+                        int randomInt3 = field.getSizeY();
+                       while(!inBounds(randomInt2,randomInt3))
+                        {
+                            Random random2 = new Random();
+                            randomInt2 = random.nextInt(a);
+                            randomInt3 = random.nextInt(b);
+                        }
+                       move(randomInt2,randomInt3);
+                    }
+                    else{
+                        int s = 0;
+                        for (s = 0; s < field.getSizeY(); s++) {
+                            if (field.getValue(0, s) == 1) {
+                                break;
+                            }
+
+                        }
+                        move(0, s-1);
+                    }
                 }
             }
         }
@@ -138,11 +168,13 @@ public class Chomp extends Game implements Recordable {
 
         System.out.println("Choose name for Player 1: ");
         Scanner playername1 = new Scanner(System.in);
+
         String name1 = playername1.nextLine();
 
 
         System.out.println("Choose name for Player 2: ");
         Scanner playername2 = new Scanner(System.in);
+
         String name2 = playername2.nextLine();
 
         System.out.println("Choose Player 2 type (0 = player, 1 = computer): ");
@@ -165,41 +197,29 @@ public class Chomp extends Game implements Recordable {
         player1 = new Player(name1, false);
         player2 = new Player(name2, comp2);
         //Spielfeldgröße
-        System.out.println("Enter 2 int for size of playingfield (Max 16 16)");
-        Scanner scanfield = new Scanner(System.in);
 
-        String t;
-        String jot;
-        do {
-            t = scanfield.next();
-            jot = scanfield.next();
-            boolean found1 = false;
-            boolean found2 = false;
-            for(int j = 0; j < 17; j++) {
+        System.out.println("Enter 2 int for size of playingfield ");
 
-                if(jot.equals(Integer.toString(j)))
-                    for (int i = 0; i < 17; i++) {
-                    if (t.equals(Integer.toString(i))) {
-                        found1 = true;
-                        break;
-                    }
-                }
 
-                found2 = true;
-                break;
+        int SizeY = 0;
+        int SizeX = 0;
+        while(!(SizeX > 0 && SizeY > 0)) {
+            Scanner scanfield = new Scanner(System.in);
 
+            try {
+                SizeX = scanfield.nextInt();
+
+            } catch (Exception e) {
+                System.out.println("Try again");
             }
+            ;
+            try {
+                SizeY = scanfield.nextInt();
+            } catch (Exception e) {
+                System.out.println("Try neu");
+            }
+        }
 
-            if(found2) break;
-            System.out.println("Error, try again");
-
-        } while (true);
-
-        System.out.println(t);
-        int SizeX = Integer.parseInt(jot);
-        int SizeY = Integer.parseInt(t);
-       // int SizeX = scanfield.nextInt();
-       // int SizeY = scanfield.nextInt(); // Was wenn >16
         field = new Field(SizeX,SizeY);
         ended = false;
         winner = null;

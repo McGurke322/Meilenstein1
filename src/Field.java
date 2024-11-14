@@ -79,7 +79,7 @@ public class Field implements Drawable {
     }
 
     public boolean quad() {
-        return getSizeX() == getSizeY();
+        return getSizeX() == getSizeY() || (getSizeX() + getSizeY() % 2 == 0);
     }
 
 }
