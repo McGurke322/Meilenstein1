@@ -1,7 +1,6 @@
 //
 //
 
-import javax.crypto.spec.RC2ParameterSpec;
 import java.util.Scanner;
 
 public class Main {
