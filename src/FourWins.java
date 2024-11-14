@@ -104,7 +104,7 @@ public class FourWins extends Game implements Recordable {
 
     //Überprüft ob an ein Spieler an einer bestimmten position gewonnen hat
     private boolean checkWin(Player player, int x, int y) {
-        if (checkRow(player.getID(), x, y, 1, 0) || checkRow(player.getID(), x, y, 0, 1) || checkRow(player.getID(), x, y, 1, 1)) {
+        if (checkRow(player.getID(), x, y, 1, 0) || checkRow(player.getID(), x, y, 0, 1) || checkRow(player.getID(), x, y, 1, 1) || checkRow(player.getID(), x, y, 1, -1)) {
             ended = true;
             winner = player;
             return true;
@@ -138,6 +138,7 @@ public class FourWins extends Game implements Recordable {
             currX += xDirection;
             currY += yDirection;
         }
+        System.out.println("Chips in einer reihe: " + n);
         if (n >= 4) {
             return true;
         }
@@ -198,8 +199,6 @@ public class FourWins extends Game implements Recordable {
         String name1;
         String name2;
         int com;
-
-        field = new Field(7, 6);
 
         System.out.println("Choose name for Player 1: ");
         Scanner name1S = new Scanner(System.in);
