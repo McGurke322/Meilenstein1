@@ -260,5 +260,3 @@ public class FourWins extends Game implements Recordable {
         record.pop();
     }
 }
-
-//  2 2 1(1)1 1 2 2
