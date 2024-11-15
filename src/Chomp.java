@@ -12,9 +12,9 @@ public class Chomp extends Game implements Recordable {
     @Override
     public void round() {
         play(player1);
-        field.draw();
+
         play(player2);
-        field.draw();
+
     }
 
     @Override
@@ -34,6 +34,7 @@ public class Chomp extends Game implements Recordable {
                         field.setValue(i, j, 1);
                     }
                 }
+         //       field.draw();
                 return true;
     }
 
@@ -179,7 +180,7 @@ public class Chomp extends Game implements Recordable {
 
        if(!ended) {
            finishedPlay = move(player, x, y);
-
+           field.draw();
            if (finishedPlay) {
                //Dokumentiere Spielzug
                recordMove(new GameMove("Chomp", player, x, y));
