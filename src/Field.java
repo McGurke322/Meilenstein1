@@ -52,11 +52,11 @@ public class Field implements Drawable {
         fieldArray[x][y] = value;
             }
 
-    private void initializePlayingFieldArray() {
+    public void initializePlayingFieldArray() {
         fieldArray = new int[sizeX][sizeY];
         for (int i = 0; i < sizeX; i++) {
             for (int j = 0; j < sizeY; j++) {
-                fieldArray[i][j] = 0;
+                initAt(i, j);
             }
         }
         draw();
@@ -82,5 +82,8 @@ public class Field implements Drawable {
         return getSizeX() == getSizeY() || (getSizeX() + getSizeY() % 2 == 0);
     }
 
+    public void initAt(int x, int y) {
+        fieldArray[x][y] = 0;
+    }
 }
 

@@ -246,7 +246,7 @@ public class FourWins extends Game implements Recordable {
         ended = false;
         winner = null;
 
-        field = new Field(7, 6);
+        field = new FourWinsGUI(7, 6);
     }
 
     @Override
