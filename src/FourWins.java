@@ -5,8 +5,19 @@ import java.util.Scanner;
 public class FourWins extends Game implements Recordable {
     private int plays = 0; //Anzahl der Spielzüge um zu überprüfen ob ein Unentschieden vorliegt
 
+    private final Object lock = new Object();
+
     public FourWins() {
         initializeGame();
+    }
+    String nextInput = "";
+
+    public void setNextInput(String string) {
+        synchronized (lock) {
+            nextInput = string;
+            lock.notify();
+            System.out.println("New Input set!");
+        }
     }
 
     @Override
@@ -18,23 +29,22 @@ public class FourWins extends Game implements Recordable {
             while (!finishedPlay) {
                 if (!player.isComputer()) {
                     System.out.println(player.getName() + "'s input (Enter single int): ");
-                    Scanner scan = new Scanner(System.in);
 
-                    String s;
-                    do {
-                        s = scan.next();
-                        boolean found = false;
-                        for (int i = 0; i < field.getSizeX(); i++) {
-                            if (s.equals(Integer.toString(i))) {
-                                found = true;
-                                break;
+                    //Warten bis input
+                    synchronized (lock) {
+                        while (nextInput.isEmpty()) {
+                            try {
+                                lock.wait(); //warte auf eingabe über setNextInput
+                            } catch (InterruptedException e) {
+                                Thread.currentThread().interrupt();
+                                return;
                             }
                         }
-                        if(found) break;
-                        System.out.println("Error, try again");
-                    } while (true);
+                    }
 
-                    intInput = Integer.parseInt(s);
+                    intInput = Integer.parseInt(nextInput);
+                    nextInput = "";
+                    //.
                     finishedPlay = true;
                 }
                 else {
@@ -246,7 +256,7 @@ public class FourWins extends Game implements Recordable {
         ended = false;
         winner = null;
 
-        field = new FourWinsGUI(7, 6);
+        field = new FourWinsGUI(7, 6, this);
     }
 
     @Override
@@ -259,3 +269,4 @@ public class FourWins extends Game implements Recordable {
         record.pop();
     }
 }
+

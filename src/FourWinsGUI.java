@@ -8,14 +8,18 @@ public class FourWinsGUI extends Field {
     private JPanel drawingPanel;
     private Graphics graphics;
     private Slot slots[][];
+    private FourWinsSlotButton buttons[];
 
     private final int SLOT_SIZE = 50;
 
     private static final Dimension WINDOW_SIZE = new Dimension(800, 600);
+    private FourWins fourWins;
 
-    public FourWinsGUI(int sizeX, int sizeY) {
+    public FourWinsGUI(int sizeX, int sizeY, FourWins fourWins) {
         super(sizeX, sizeY);
+        this.fourWins = fourWins;
         slots = new Slot[sizeX][sizeY];
+        buttons = new FourWinsSlotButton[sizeX];
         initializePlayingFieldArray();
         initializeFrame();
     }
@@ -35,6 +39,17 @@ public class FourWinsGUI extends Field {
         };
         drawingPanel.setPreferredSize(WINDOW_SIZE);
         drawingPanel.setBackground(Color.blue);
+
+        for (int i = 0; i < slots.length; i++) {
+            FourWinsSlotButton button = new FourWinsSlotButton(String.valueOf(i), i, this);
+            button.addActionListener(e -> {
+                button.test();
+                button.repaint();
+            });
+            buttons[i] = button;
+            drawingPanel.add(button);
+        }
+
         frame.add(drawingPanel);
 
         drawingPanel.repaint();
@@ -71,5 +86,10 @@ public class FourWinsGUI extends Field {
         }
         slots[x][y].setColor(color);
         drawingPanel.repaint();
+    }
+
+    public void doSmth(int i) {
+        fourWins.setNextInput(String.valueOf(i));
+        System.out.println(String.valueOf(i));
     }
 }
